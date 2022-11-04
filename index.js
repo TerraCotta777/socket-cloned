@@ -16,7 +16,7 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (client) => {
-  client.on("username", ([username]) => {
+  client.on("username", ([username, group]) => {
     const room = (
       Math.floor(Math.random() * (999999 - 111111)) + 111111
     ).toString();
@@ -30,6 +30,7 @@ io.on("connection", (client) => {
       room: room,
       isAdmin: true,
       points: 0,
+			group: group,
     };
 
     users[room] = { [client.id]: user };
@@ -60,10 +61,9 @@ io.on("connection", (client) => {
     io.to(room).emit("users", Object.values(users[room]));
   });
 
-  client.on("join", ([username, room]) => {
-    if (users[room]) {
-      console.log("exists");
-      client.emit("enterNickname", [username, room]);
+  client.on("join", ([username, room, group]) => {
+    if (users[room] &&  Object.values(users[room])[0].group === group) {
+				client.emit("enterNickname", [username, room]);
     } else {
       console.log("doesnt exist");
       client.emit("error", "You don't have access to this room");
