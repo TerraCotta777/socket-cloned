@@ -64,6 +64,8 @@ io.on("connection", (client) => {
   client.on("join", ([username, room, group]) => {
     if (users[room] &&  Object.values(users[room])[0].group === group) {
 				client.emit("enterNickname", [username, room]);
+    } else if (username === 'anonym') {
+      client.emit('enterNickname', [username, room])
     } else {
       console.log("doesnt exist");
       client.emit("error", "You don't have access to this room");
@@ -98,8 +100,8 @@ io.on("connection", (client) => {
     }
   });
 
-  client.on("start-game", (title) => {
-    io.to(client.room).emit("starting", title);
+  client.on("start-game", ([test, title]) => {
+    io.to(client.room).emit("starting", [test, title]);
     console.log(client.room, "starting");
   });
 
