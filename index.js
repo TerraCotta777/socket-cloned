@@ -64,7 +64,7 @@ io.on("connection", (client) => {
   client.on("join", ([username, room, group]) => {
     if (users[room] &&  Object.values(users[room])[0].group === group) {
 				client.emit("enterNickname", [username, room]);
-    } else if (username === 'anonym') {
+    } else if (users[room] && username === 'anonym') {
       client.emit('enterNickname', [username, room])
     } else {
       console.log("doesnt exist");
