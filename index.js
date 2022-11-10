@@ -42,12 +42,12 @@ io.on("connection", (client) => {
     console.log(users);
   });
 
-  client.on("nickname", ([username, room, nickname]) => {
+  client.on("nickname", ([username, room, nickname, id]) => {
     console.log("Nickname");
 
     const user = {
       name: username,
-      id: client.id,
+      id: id,
       room: room,
       isAdmin: false,
       points: 0,
@@ -89,8 +89,9 @@ io.on("connection", (client) => {
     console.log(name.email, points);
     if (users[client.room]) {
       console.log('I EXIST');
+      // console.log(users[client.room]);
       Object.values(users[client.room]).forEach((item) => {
-        if (item.name === name.email) {
+        if (item.id === name.id) {
           console.log(item.points);
           console.log("CORRECT");
           item.points = item.points + points;
